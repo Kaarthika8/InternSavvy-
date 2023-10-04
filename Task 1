@@ -1,0 +1,54 @@
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class TemperatureConverterGUI {
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Temperature Converter");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setLayout(new FlowLayout());
+
+            JLabel label = new JLabel("Choose unit:");
+            JComboBox<String> unitComboBox = new JComboBox<>(new String[]{"Celsius", "Fahrenheit"});
+            JTextField temperatureField = new JTextField(10);
+            JButton convertButton = new JButton("Convert");
+            
+            JTextArea resultArea = new JTextArea(10, 20); // Larger text area
+            resultArea.setEditable(false);
+            JScrollPane scrollPane = new JScrollPane(resultArea); // Add a scroll pane
+
+            frame.add(label);
+            frame.add(unitComboBox);
+            frame.add(temperatureField);
+            frame.add(convertButton);
+            frame.add(scrollPane); // Add scroll pane instead of resultArea directly
+
+            convertButton.addActionListener(new ActionListener() {
+               // @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        double temp = Double.parseDouble(temperatureField.getText());
+                        int selectedIndex = unitComboBox.getSelectedIndex();
+                        double convertedTemp;
+
+                        if (selectedIndex == 0) {
+                            convertedTemp = (temp * 9 / 5) + 32;
+                            resultArea.setText(temp + "°C = " + convertedTemp + "°F");
+                        } else if (selectedIndex == 1) {
+                            convertedTemp = (temp - 32) * 5 / 9;
+                            resultArea.setText(temp + "°F = " + convertedTemp + "°C");
+                        }
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(frame, "Invalid input. Please enter a valid number.");
+                    }
+                }
+            });
+
+            frame.pack();
+            frame.setVisible(true);
+        });
+    }
+}

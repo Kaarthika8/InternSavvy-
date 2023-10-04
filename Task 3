@@ -1,0 +1,96 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class CurrencyConverter {
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Currency Converter");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setLayout(new FlowLayout());
+
+            JLabel amountLabel = new JLabel("Enter amount:");
+            JTextField amountField = new JTextField(10);
+
+            JLabel fromCurrencyLabel = new JLabel("From currency:");
+            JComboBox<String> fromCurrencyComboBox = new JComboBox<>(new String[]{"USD", "EUR", "JPY", "INR"});
+
+            JLabel toCurrencyLabel = new JLabel("To currency:");
+            JComboBox<String> toCurrencyComboBox = new JComboBox<>(new String[]{"USD", "EUR", "JPY", "INR"});
+
+            JButton convertButton = new JButton("Convert");
+            JLabel resultLabel = new JLabel(""); // Set empty string initially
+
+            frame.add(amountLabel);
+            frame.add(amountField);
+            frame.add(fromCurrencyLabel);
+            frame.add(fromCurrencyComboBox);
+            frame.add(toCurrencyLabel);
+            frame.add(toCurrencyComboBox);
+            frame.add(convertButton);
+            frame.add(resultLabel);
+
+            convertButton.addActionListener(new ActionListener() {
+                //@Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        double amount = Double.parseDouble(amountField.getText());
+                        String fromCurrency = fromCurrencyComboBox.getSelectedItem().toString();
+                        String toCurrency = toCurrencyComboBox.getSelectedItem().toString();
+
+                        // Replace with real exchange rate data or use an API
+                        double exchangeRateUSD = 1.0;
+                        double exchangeRateEUR = 0.95;
+                        double exchangeRateJPY = 148.98;
+                        double exchangeRateINR = 83.22;
+
+                        double result = convertCurrency(amount, fromCurrency, toCurrency, exchangeRateUSD, exchangeRateEUR, exchangeRateJPY, exchangeRateINR);
+
+                        resultLabel.setText("Result: " + amount + " " + fromCurrency + " = " + result + " " + toCurrency);
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(frame, "Invalid input. Please enter a valid number.");
+                    }
+                }
+            });
+
+            frame.pack();
+            frame.setVisible(true);
+        });
+    }
+
+    private static double convertCurrency(double amount, String fromCurrency, String toCurrency,
+                                           double exchangeRateUSD, double exchangeRateEUR, double exchangeRateJPY, double exchangeRateINR) {
+        double result = 0.0;
+
+        if (fromCurrency.equals("USD") && toCurrency.equals("EUR")) {
+            result = amount * exchangeRateEUR;
+        } else if (fromCurrency.equals("USD") && toCurrency.equals("JPY")) {
+            result = amount * exchangeRateJPY;
+        } else if (fromCurrency.equals("USD") && toCurrency.equals("INR")) {
+            result = amount * exchangeRateINR;
+        } else if (fromCurrency.equals("EUR") && toCurrency.equals("USD")) {
+            result = amount / exchangeRateEUR;
+        } else if (fromCurrency.equals("EUR") && toCurrency.equals("JPY")) {
+            result = (amount / exchangeRateEUR) * exchangeRateJPY;
+        } else if (fromCurrency.equals("EUR") && toCurrency.equals("INR")) {
+            result = (amount / exchangeRateEUR) * exchangeRateINR;
+        } else if (fromCurrency.equals("JPY") && toCurrency.equals("USD")) {
+            result = amount / exchangeRateJPY;
+        } else if (fromCurrency.equals("JPY") && toCurrency.equals("EUR")) {
+            result = (amount / exchangeRateJPY) * exchangeRateEUR;
+        } else if (fromCurrency.equals("JPY") && toCurrency.equals("INR")) {
+            result = (amount / exchangeRateJPY) * exchangeRateINR;
+        } else if (fromCurrency.equals("INR") && toCurrency.equals("USD")) {
+            result = amount / exchangeRateINR;
+        } else if (fromCurrency.equals("INR") && toCurrency.equals("EUR")) {
+            result = (amount / exchangeRateINR) * exchangeRateEUR;
+        } else if (fromCurrency.equals("INR") && toCurrency.equals("JPY")) {
+            result = (amount / exchangeRateINR) * exchangeRateJPY;
+        } else {
+            result = amount;
+        }
+
+        return result;
+    }
+}
